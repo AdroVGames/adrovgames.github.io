@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AdroVGames — atmospheric games and Unity tools</title>
+<meta name="description" content="AdroVGames: first-person horror and survival games released on Steam since 2016, and Unity tools for shipping games, by an indie developer and level artist from Ukraine.">
+<meta property="og:title" content="AdroVGames">
+<meta property="og:description" content="Atmospheric games and Unity tools by an indie developer and level artist from Ukraine.">
+<meta property="og:image" content="images/hero.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b111b'/%3E%3Ctext x='32' y='43' font-family='Arial,sans-serif' font-weight='700' font-size='30' text-anchor='middle'%3E%3Ctspan fill='%23ffb547'%3EA%3C/tspan%3E%3Ctspan fill='%23eef2f7'%3EV%3C/tspan%3E%3C/text%3E%3C/svg%3E">
+<style>
+@font-face{font-family:"Space Grotesk";font-weight:500;font-display:swap;src:url(fonts/space-grotesk-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Space Grotesk";font-weight:700;font-display:swap;src:url(fonts/space-grotesk-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:Inter;font-weight:400;font-display:swap;src:url(fonts/inter-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:Inter;font-weight:500;font-display:swap;src:url(fonts/inter-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:Inter;font-weight:600;font-display:swap;src:url(fonts/inter-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:Inter;font-weight:400;font-display:swap;unicode-range:U+0400-04FF;src:url(fonts/inter-cyrillic-400-normal.woff2) format("woff2")}
+@font-face{font-family:Inter;font-weight:600;font-display:swap;unicode-range:U+0400-04FF;src:url(fonts/inter-cyrillic-600-normal.woff2) format("woff2")}
+
+:root{
+  --bg:#0a1019; --bg2:#0e1622; --card:#121c2a; --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.14);
+  --text:#eef2f7; --muted:#9aa8bb; --dim:#6f7d90; --accent:#ffb547; --accent2:#ff8a3d;
+  --head:"Space Grotesk",Inter,system-ui,sans-serif; --body:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --wrap:1180px; --r:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--text);font:400 16px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 24px}
+.grid-bg{background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:48px 48px}
+
+/* header */
+header{position:fixed;inset:0 0 auto 0;z-index:20;transition:background .25s,border-color .25s;border-bottom:1px solid transparent}
+header.solid{background:rgba(10,16,25,.88);backdrop-filter:blur(10px);border-color:var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.mark{font:700 22px/1 var(--head);letter-spacing:-.5px}
+.mark b{color:var(--accent)}
+.brand span{font:500 15px/1 var(--head);color:var(--muted);letter-spacing:.3px}
+nav{display:flex;gap:28px}
+nav a{text-decoration:none;color:var(--muted);font-size:14.5px;font-weight:500;transition:color .2s}
+nav a:hover{color:var(--text)}
+
+/* hero */
+.hero{position:relative;min-height:88vh;display:flex;align-items:flex-end;overflow:hidden}
+.hero .bgimg{position:absolute;inset:0;background:url(images/hero.jpg) center 40%/cover no-repeat;transform:scale(1.03)}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,16,25,.94) 0%,rgba(10,16,25,.78) 38%,rgba(10,16,25,.25) 75%,rgba(10,16,25,.35) 100%),linear-gradient(0deg,var(--bg) 0%,rgba(10,16,25,0) 40%)}
+.hero .wrap{position:relative;z-index:1;padding-bottom:9vh;width:100%}
+.eyebrow{font:500 13px/1 var(--body);letter-spacing:2.2px;text-transform:uppercase;color:var(--accent)}
+.hero h1{font:700 clamp(40px,6.4vw,84px)/1.02 var(--head);letter-spacing:-1.5px;margin:18px 0 22px;max-width:13ch}
+.hero p{font-size:clamp(17px,1.6vw,20px);color:#c9d3e0;max-width:560px;margin:0}
+.stats{display:flex;flex-wrap:wrap;gap:36px;margin-top:44px}
+.stat b{display:block;font:700 30px/1 var(--head)}
+.stat span{font-size:13.5px;color:var(--muted)}
+
+/* sections */
+section{padding:110px 0 0}
+.shead{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:34px;flex-wrap:wrap}
+.shead h2{font:700 clamp(30px,3.6vw,44px)/1.05 var(--head);letter-spacing:-.8px;margin:12px 0 0}
+.shead p{color:var(--muted);max-width:440px;margin:0}
+
+/* game cards */
+.featured{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:22px}
+.games{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.game{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;cursor:pointer;text-align:left;color:inherit;font:inherit;padding:0;display:flex;flex-direction:column;transition:transform .25s,border-color .25s,box-shadow .25s}
+.game:hover,.game:focus-visible{transform:translateY(-4px);border-color:var(--line2);box-shadow:0 18px 40px rgba(0,0,0,.4);outline:none}
+.game .art{position:relative;aspect-ratio:616/353;overflow:hidden;background:#05080d}
+.game .art img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.game:hover .art img{transform:scale(1.04)}
+.badge{position:absolute;top:12px;right:12px;font:600 11.5px/1 var(--body);letter-spacing:.6px;text-transform:uppercase;padding:7px 10px;border-radius:999px;background:rgba(10,16,25,.82);border:1px solid var(--line2);color:var(--text)}
+.badge.soon{color:var(--accent);border-color:rgba(255,181,71,.45)}
+.game .info{padding:18px 20px 20px;display:flex;flex-direction:column;gap:8px;flex:1}
+.game h3{font:700 21px/1.15 var(--head);margin:0}
+.featured .game h3{font-size:26px}
+.meta{font-size:13px;color:var(--dim);letter-spacing:.2px}
+.game p{margin:0;color:var(--muted);font-size:15px}
+.more{margin-top:auto;padding-top:6px;font-size:13.5px;font-weight:600;color:var(--accent)}
+
+/* mod strip */
+.mod{margin-top:22px;border:1px solid var(--line);border-radius:var(--r);padding:22px 24px;display:flex;gap:22px;align-items:center;background:linear-gradient(90deg,rgba(255,181,71,.06),transparent 60%)}
+.mod .tag{flex:none;font:600 11.5px/1 var(--body);letter-spacing:.6px;text-transform:uppercase;color:var(--accent);border:1px solid rgba(255,181,71,.45);border-radius:999px;padding:7px 10px}
+.mod h3{margin:0 0 4px;font:700 19px/1.2 var(--head)}
+.mod h3 .cy{font-family:var(--body);font-weight:600}
+.mod p{margin:0;color:var(--muted);font-size:15px}
+
+/* tool */
+.tool{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;background:var(--bg2);border:1px solid var(--line);border-radius:22px;padding:48px;overflow:hidden;position:relative}
+.tool .shot{position:relative}
+.tool .shot img{border-radius:10px;box-shadow:0 24px 60px rgba(0,0,0,.55);-webkit-mask-image:linear-gradient(180deg,#000 82%,transparent);mask-image:linear-gradient(180deg,#000 82%,transparent)}
+.icon{width:58px;height:58px;border-radius:14px;background:linear-gradient(160deg,var(--accent),var(--accent2));display:grid;place-items:center;margin-bottom:20px}
+.tool h3{font:700 32px/1.1 var(--head);margin:0 0 6px;letter-spacing:-.5px}
+.tool .sub{color:var(--muted);margin:0 0 22px}
+.checks{list-style:none;padding:0;margin:0 0 28px;display:grid;gap:12px}
+.checks li{display:flex;gap:12px;color:#cfd8e4;font-size:15.5px}
+.checks li::before{content:"";flex:none;width:18px;height:18px;margin-top:3px;border-radius:50%;background:rgba(255,181,71,.15) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' fill='none' stroke='%23ffb547' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat}
+.btns{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 18px;border-radius:10px;font-weight:600;font-size:14.5px;text-decoration:none;border:1px solid var(--line2);transition:background .2s,border-color .2s}
+.btn:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.25)}
+.btn.primary{background:var(--accent);color:#171006;border-color:var(--accent)}
+.btn.primary:hover{background:#ffc165}
+.note{font-size:13px;color:var(--dim);margin-top:16px}
+
+/* about */
+.about{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
+.about p{color:#c9d3e0;margin:0 0 16px;font-size:17px}
+.skills{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.skills span{border:1px solid var(--line2);border-radius:999px;padding:8px 14px;font-size:14px;color:#d6dee9}
+.timeline{border-left:1px solid var(--line2);margin:6px 0 0;padding:0;list-style:none}
+.timeline li{position:relative;padding:0 0 18px 22px;color:var(--muted);font-size:15px}
+.timeline li::before{content:"";position:absolute;left:-5px;top:8px;width:9px;height:9px;border-radius:50%;background:var(--bg);border:2px solid var(--accent)}
+.timeline b{color:var(--text);font-weight:600;margin-right:6px}
+
+/* contact */
+.contact{margin:110px 0 0;padding:80px 0;border-top:1px solid var(--line);text-align:center}
+.contact h2{font:700 clamp(30px,4vw,48px)/1.1 var(--head);margin:14px 0 16px;letter-spacing:-.8px}
+.contact p{color:var(--muted);margin:0 auto 30px;max-width:520px}
+.mail{font:700 clamp(20px,2.6vw,30px)/1 var(--head);color:var(--accent);text-decoration:none;border-bottom:2px solid rgba(255,181,71,.35);padding-bottom:6px}
+.mail:hover{border-color:var(--accent)}
+footer{border-top:1px solid var(--line);padding:28px 0 36px;color:var(--dim);font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+/* viewer */
+dialog{border:0;padding:0;background:transparent;max-width:min(1100px,94vw);width:100%;color:var(--text)}
+dialog::backdrop{background:rgba(4,7,12,.86);backdrop-filter:blur(4px)}
+.viewer{background:var(--card);border:1px solid var(--line2);border-radius:16px;overflow:hidden}
+.viewer .big{position:relative;aspect-ratio:16/9;background:#000}
+.viewer .big img{width:100%;height:100%;object-fit:contain}
+.nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:1px solid var(--line2);background:rgba(10,16,25,.7);color:var(--text);font-size:20px;cursor:pointer}
+.nav-btn.prev{left:14px}.nav-btn.next{right:14px}
+.close{position:absolute;top:12px;right:12px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line2);background:rgba(10,16,25,.75);color:var(--text);font-size:22px;line-height:1;cursor:pointer;z-index:2}
+.viewer .txt{padding:20px 24px 24px;display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}
+.viewer h3{margin:0 0 4px;font:700 24px/1.15 var(--head)}
+.viewer p{margin:0;color:var(--muted)}
+.thumbs{display:flex;gap:8px}
+.thumbs button{width:88px;aspect-ratio:16/9;padding:0;border:2px solid transparent;border-radius:6px;overflow:hidden;cursor:pointer;background:#000;opacity:.6}
+.thumbs button.on{border-color:var(--accent);opacity:1}
+.thumbs img{width:100%;height:100%;object-fit:cover}
+
+@media (max-width:980px){
+  .games{grid-template-columns:1fr 1fr}
+  .tool{grid-template-columns:1fr;padding:32px}
+  .about{grid-template-columns:1fr;gap:28px}
+}
+@media (max-width:680px){
+  .wrap{padding:0 16px}
+  nav{display:none}
+  .featured,.games{grid-template-columns:1fr}
+  section{padding-top:80px}
+  .hero{min-height:82vh}
+  .stats{gap:24px}
+  .mod{flex-direction:column;align-items:flex-start}
+  .tool{padding:24px 20px}
+  .viewer .txt{grid-template-columns:1fr}
+  .thumbs button{width:72px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header id="top">
+  <div class="wrap bar">
+    <a class="brand" href="#">
+      <span class="mark"><b>A</b>V</span><span>AdroVGames</span>
+    </a>
+    <nav>
+      <a href="#games">Games</a>
+      <a href="#tools">Tools</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="bgimg" role="img" aria-label="A screenshot from ColdSide: a red sky over an abandoned research site"></div>
+  <div class="wrap">
+    <div class="eyebrow">Indie developer &amp; level artist · Ukraine</div>
+    <h1>Atmospheric games, built by a level artist.</h1>
+    <p>First-person horror, night survival and a returns-desk sim — plus the Unity tools I make to ship them.</p>
+    <div class="stats">
+      <div class="stat"><b>6</b><span>games released on Steam</span></div>
+      <div class="stat"><b>2016</b><span>first release</span></div>
+      <div class="stat"><b>Unity · CryEngine</b><span>engines</span></div>
+    </div>
+  </div>
+</div>
+
+<main>
+<section id="games">
+  <div class="wrap">
+    <div class="shead">
+      <div><div class="eyebrow">Games</div><h2>Worlds built around light and place</h2></div>
+      <p>Click a game to see screenshots.</p>
+    </div>
+    <div class="featured" id="featured"></div>
+    <div class="games" id="grid"></div>
+
+    <div class="mod">
+      <div class="tag">Mod</div>
+      <div>
+        <h3><span class="cy">«ПЕРЕХОД»</span> — story mod for S.T.A.L.K.E.R.: Call of Pripyat</h3>
+        <p>A standalone story with its own quests on top of the Enhanced Edition, and a fully redesigned interface: menus, dialogs, PDA and HUD. Released on the Steam Workshop in 2026.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tools">
+  <div class="wrap">
+    <div class="shead">
+      <div><div class="eyebrow">Unity tools</div><h2>Tools I use in my own games</h2></div>
+      <p>When something costs me time on every release, I turn it into a tool, test it on my own Steam games and share it.</p>
+    </div>
+    <div class="tool grid-bg">
+      <div>
+        <div class="icon" aria-hidden="true">
+          <svg width="30" height="30" viewBox="0 0 100 100"><path d="M50 14 L74 40 L59 40 L59 62 L41 62 L41 40 L26 40 Z" fill="#101a2a"/><rect x="27" y="72" width="46" height="9" rx="4.5" fill="#101a2a"/></svg>
+        </div>
+        <h3>Easy Ship Kit for Steam</h3>
+        <p class="sub">A Unity editor tool: build, check and upload your game to Steam from one window.</p>
+        <ul class="checks">
+          <li>Build profiles — Release, Test, Demo — each with its own platforms, scenes, defines, App ID, depots and branch.</li>
+          <li>Checks that catch release mistakes before players do: fog and shaders that vanish from the build, test builds, a version that was never bumped.</li>
+          <li>Upload with Valve's steamcmd from your own Steamworks SDK. Sign in once; the password is never stored.</li>
+          <li>Editor-only, full C# source, Unity 6 or newer, any render pipeline.</li>
+        </ul>
+        <div class="btns">
+          <a class="btn primary" href="easy-ship-kit/EasyShipKit_Manual.pdf">Documentation (PDF)</a>
+          <a class="btn" href="mailto:adrov1993@gmail.com?subject=Easy%20Ship%20Kit">Support</a>
+        </div>
+        <p class="note">Version 1.0 · Not made or endorsed by Valve.</p>
+      </div>
+      <div class="shot"><img src="images/easy-ship-kit.png" alt="The Easy Ship Kit window in the Unity Editor: build profile, platforms with Steam depots, and Steam settings" loading="lazy" width="527" height="549"></div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap about">
+    <div>
+      <div class="eyebrow">About</div>
+      <div class="shead" style="margin-bottom:22px"><h2>Level art first</h2></div>
+      <div class="skills">
+        <span>Level design</span><span>Level art</span><span>Lighting &amp; atmosphere</span><span>Environment storytelling</span><span>Unity &amp; C#</span><span>CryEngine</span><span>Steam releases</span><span>Modding</span>
+      </div>
+    </div>
+    <div>
+      <p>I'm a level artist and indie developer from Ukraine. My games start from a place — a bunker, a mansion, a night-shift desk — and from how light and sound make it feel.</p>
+      <p>I work across the whole pipeline: levels and lighting, gameplay code, builds and Steam releases. That last part is where my tools come from.</p>
+      <ul class="timeline">
+        <li><b>2026</b>STILLTRACE, «ПЕРЕХОД» mod, Easy Ship Kit · RETURN POLICY and Void Inside coming</li>
+        <li><b>2025</b>ColdSide: Retro Edition</li>
+        <li><b>2021</b>Uninvited Guest</li>
+        <li><b>2020</b>ColdSide</li>
+        <li><b>2018</b>ShadowSide</li>
+        <li><b>2016</b>Investigator — the first one</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="contact" id="contact">
+  <div class="wrap">
+    <div class="eyebrow">Contact</div>
+    <h2>Questions, support, collaboration</h2>
+    <p>For Easy Ship Kit support, please include your Unity version and the Console's red lines.</p>
+    <a class="mail" href="mailto:adrov1993@gmail.com">adrov1993@gmail.com</a>
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 AdroVGames. Game art and screenshots © AdroVGames.</span>
+    <span>Steam and Steamworks are trademarks of Valve Corporation. Unity is a trademark of Unity Technologies. S.T.A.L.K.E.R. is a trademark of GSC Game World.</span>
+  </div>
+</footer>
+
+<dialog id="viewer" aria-label="Game screenshots">
+  <div class="viewer">
+    <div class="big">
+      <button class="close" type="button" aria-label="Close">×</button>
+      <img id="vImg" alt="">
+      <button class="nav-btn prev" type="button" aria-label="Previous screenshot">‹</button>
+      <button class="nav-btn next" type="button" aria-label="Next screenshot">›</button>
+    </div>
+    <div class="txt">
+      <div><h3 id="vTitle"></h3><p id="vText"></p></div>
+      <div class="thumbs" id="vThumbs"></div>
+    </div>
+  </div>
+</dialog>
+
+<script>
+const GAMES = [
+  { id:"stilltrace", name:"STILLTRACE", meta:"2026 · Survival horror · Co-op", status:"Out now", featured:true,
+    text:"A night survival horror where your flashlight is your best weapon. Scavenge by day, defend the beacon by night and survive 14 days — alone or with a friend in online co-op." },
+  { id:"return-policy", name:"RETURN POLICY", meta:"Narrative sim", status:"Coming soon", soon:true, featured:true,
+    text:"You work nights at a returns desk. Customers lie, haggle, guilt-trip you and throw punches, and you decide what gets accepted. The last guy on this shift went missing." },
+  { id:"void-inside", name:"Void Inside", meta:"Psychological horror", status:"Coming soon", soon:true,
+    text:"The surface is a radioactive wasteland, and disease reached the shelters too. You are the last survivor of yours." },
+  { id:"coldside-retro", name:"ColdSide: Retro Edition", meta:"2025 · Horror",
+    text:"The 2020 horror reimagined in the style of classic retro games: back in the bunker where anomalous phenomena were studied." },
+  { id:"uninvited-guest", name:"Uninvited Guest", meta:"2021 · Psychological horror",
+    text:"1930. A villager is drawn into an old mansion — first-person psychological horror." },
+  { id:"coldside", name:"ColdSide", meta:"2020 · Psychological horror",
+    text:"An abandoned underground laboratory that studied anomalous phenomena." },
+  { id:"shadowside", name:"ShadowSide", meta:"2018 · Exploration",
+    text:"Policeman Alex Carter has guarded a quiet town for years. Nothing but routine." },
+  { id:"investigator", name:"Investigator", meta:"2016 · Exploration horror",
+    text:"First-person exploration with horror elements in a world of extreme weather cataclysms. My first game." }
+];
+
+function card(g){
+  const b = document.createElement("button");
+  b.type = "button"; b.className = "game";
+  b.setAttribute("aria-label", g.name + " — screenshots");
+  b.innerHTML =
+    '<div class="art"><img src="images/games/' + g.id + '.jpg" alt="' + g.name + ' key art" loading="lazy" width="616" height="353">' +
+    (g.status ? '<span class="badge' + (g.soon ? ' soon' : '') + '">' + g.status + '</span>' : '') + '</div>' +
+    '<div class="info"><div class="meta">' + g.meta + '</div><h3>' + g.name + '</h3><p>' + g.text + '</p><span class="more">Screenshots →</span></div>';
+  b.addEventListener("click", () => openViewer(g));
+  return b;
+}
+const featured = document.getElementById("featured"), grid = document.getElementById("grid");
+GAMES.forEach(g => (g.featured ? featured : grid).appendChild(card(g)));
+
+const dlg = document.getElementById("viewer"), vImg = document.getElementById("vImg"),
+      vTitle = document.getElementById("vTitle"), vText = document.getElementById("vText"), vThumbs = document.getElementById("vThumbs");
+let cur = null, idx = 0;
+function show(i){
+  idx = (i + 3) % 3;
+  vImg.src = "images/games/" + cur.id + "-" + (idx + 1) + ".jpg";
+  vImg.alt = cur.name + " screenshot " + (idx + 1);
+  [...vThumbs.children].forEach((t, n) => t.classList.toggle("on", n === idx));
+}
+function openViewer(g){
+  cur = g; vTitle.textContent = g.name; vText.textContent = g.text;
+  vThumbs.innerHTML = "";
+  for (let n = 0; n < 3; n++){
+    const t = document.createElement("button"); t.type = "button"; t.setAttribute("aria-label", "Screenshot " + (n + 1));
+    t.innerHTML = '<img src="images/games/' + g.id + '-' + (n + 1) + '.jpg" alt="" loading="lazy">';
+    t.addEventListener("click", () => show(n)); vThumbs.appendChild(t);
+  }
+  show(0);
+  if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+}
+dlg.querySelector(".close").addEventListener("click", () => dlg.close());
+dlg.querySelector(".prev").addEventListener("click", () => show(idx - 1));
+dlg.querySelector(".next").addEventListener("click", () => show(idx + 1));
+dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+document.addEventListener("keydown", e => {
+  if (!dlg.open) return;
+  if (e.key === "ArrowLeft") show(idx - 1);
+  if (e.key === "ArrowRight") show(idx + 1);
+});
+
+const header = document.querySelector("header");
+const onScroll = () => header.classList.toggle("solid", window.scrollY > 40);
+window.addEventListener("scroll", onScroll, { passive:true }); onScroll();
+</script>
+</body>
+</html>
